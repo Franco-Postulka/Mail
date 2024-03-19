@@ -1,0 +1,21 @@
+textarea {
+    min-height: 400px;
+}
+#emails-view > div{
+    border: 1px groove grey;
+    padding: 4px;
+    margin: 2px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.read{
+    background-color: rgb(211, 208, 208);
+}
+.unread{
+    background-color: white;
+}
+
+span{
+    font-weight: bold;
+}
