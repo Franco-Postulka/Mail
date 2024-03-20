@@ -63,30 +63,32 @@ function load_mailbox(mailbox) {
   .then(response => response.json())
   .then(emails => {
       if (emails.length > 0){
+        const title = document.createElement('section');
+        title.innerHTML=  `<span>From</span><span>Subject</span><span>Date</span>`
+        title.className = 'title'
+        document.querySelector('#emails-view').append(title);
+
         for (let i = 0; i < emails.length; i++) {
+
           const element = document.createElement('div');
-          if (mailbox === 'sent'){
-            const recipientsDiv = document.createElement('div');
-            recipientsDiv.innerHTML = emails[i].recipients;
+          
+          
+          const sendersDiv = document.createElement('div');
+          sendersDiv.innerHTML = emails[i].sender;
 
-            element.append(recipientsDiv);
-          }else{
-            const senderDiv = document.createElement('div');
-            senderDiv.innerHTML = emails[i].sender;
-
-            element.append(senderDiv);
-          }
           const subjectDiv = document.createElement('div');
           subjectDiv.innerHTML = emails[i].subject;
 
           const timestampDiv = document.createElement('div');
           timestampDiv.innerHTML = emails[i].timestamp;
           
-        
+          
+          element.append(sendersDiv);
           element.append(subjectDiv);
           element.append(timestampDiv);
-          element.id = `${emails[i].id}`;
 
+          element.id = `${emails[i].id}`;
+          
         document.querySelector('#emails-view').append(element);
         if (emails[i].read === true){
           element.className = 'read';
@@ -96,18 +98,21 @@ function load_mailbox(mailbox) {
         }
         view_email(mailbox);
       }
+      else{
+        const div = document.createElement('div');
+        div.innerHTML = `No emails in ${mailbox} `;
+        div.className = 'no-emails'
+        document.querySelector('#emails-view').append(div);
+      }
   });
 }
 
 function view_email(mailbox){
   document.addEventListener('click', function clickHandler(event) {
-    // Desactivar el event listener para evitar múltiples clics
     document.removeEventListener('click', clickHandler);
 
-    // Find what was clicked on
     let element = event.target;
     
-    // Realizar tu lógica restante aquí...
     if (element.parentElement && element.parentElement.className){
       if (element.parentElement.className === 'read' || element.parentElement.className === 'unread' ){
         element = element.parentElement;
@@ -133,9 +138,10 @@ function view_email(mailbox){
         <p><span>To: </span>${email.recipients}</p>
         <p><span>Date: </span>${email.timestamp}</p><hr> 
         <p><span>Subject: </span>${email.subject}</p><hr> 
-        ${email.body}<hr>`;
+        ${email.body.replace(/\n/g, '<br/>')}<hr>`;
         archive(mailbox,email);
         reply(mailbox,email);
+
       });
     }
   });
@@ -144,6 +150,8 @@ function view_email(mailbox){
 function archive(mailbox,email){
   if (mailbox != 'sent'){
     const button = document.createElement('button');
+    button.className = 'btn btn-primary';
+    button.id = 'archive'
     if (email.archived === false){
       button.innerHTML = "Archive";
       document.querySelector('#single-email').append(button);
@@ -181,6 +189,7 @@ function archive(mailbox,email){
 function reply(mailbox, email){
   if (mailbox != 'sent'){
     const button = document.createElement('button');
+    button.className = 'btn btn-primary'
     button.innerHTML = "Reply";
     document.querySelector('#single-email').append(button);
     button.onclick = function() {
@@ -205,7 +214,7 @@ function reply(mailbox, email){
       document.querySelector('#compose-body').value = `
       -----------------------------------------------------------
       On ${email.timestamp} ${email.sender} wrote:
-      "${email.body}"`;
+      ${email.body}`;
 
       document.querySelector('#compose-form').onsubmit = () =>{
 

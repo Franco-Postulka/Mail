@@ -8,14 +8,33 @@ textarea {
     display: flex;
     justify-content: space-between;
 }
+.title{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    padding-bottom: 10px;
+}
 
 .read{
     background-color: rgb(211, 208, 208);
 }
 .unread{
     background-color: white;
+    font-weight: bold;
+}
+.no-emails{
+    background-color: rgb(211, 208, 208);
 }
 
 span{
     font-weight: bold;
+}
+
+#submit{
+    display: block;
+    margin: 10px auto;
+}
+
+#archive{
+    margin-right: 10px;
 }
